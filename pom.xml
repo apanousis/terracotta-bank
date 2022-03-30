@@ -115,7 +115,7 @@
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
-			<version>3.1.0</version>
+			<version>3.19.1</version>
 		</dependency>
 
         <dependency>
@@ -307,8 +307,7 @@
 								</filter>
 							</filters>
 							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>com.joshcummings.codeplay.terracotta.Mainer</mainClass>
 								</transformer>
 							</transformers>

@@ -183,7 +183,6 @@ public class SecurityScannerEventListener implements WebDriverEventListener {
         return scannerIds;
     }
     private void spiderWithZap(String baseUrl) {
-        zapScanner.excludeFromSpider("http://excalibur-web:8530/account/logout");
         zapScanner.setThreadCount(5);
         zapScanner.setMaxDepth(5);
         zapScanner.setPostForms(false);

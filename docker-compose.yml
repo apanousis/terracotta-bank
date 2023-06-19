@@ -6,18 +6,48 @@ services:
     ports:
       - "8080:8080"
 
-  selenium_grid:
-    image: dosel/zalenium
+  chrome:
+    image: selenium/node-chrome:4.10.0-20230607
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
     ports:
-      - "4444:4444"
-    command:
-      - start
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    privileged: true
+      - "6900:5900"
 
-  selenium_grid_dependency:
-    image: elgalu/selenium:latest
+#  edge:
+#    image: selenium/node-edge:4.10.0-20230607
+#    shm_size: 2gb
+#    depends_on:
+#      - selenium-hub
+#    environment:
+#      - SE_EVENT_BUS_HOST=selenium-hub
+#      - SE_EVENT_BUS_PUBLISH_PORT=4442
+#      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+#    ports:
+#      - "6901:5900"
+#
+#  firefox:
+#    image: selenium/node-firefox:4.10.0-20230607
+#    shm_size: 2gb
+#    depends_on:
+#      - selenium-hub
+#    environment:
+#      - SE_EVENT_BUS_HOST=selenium-hub
+#      - SE_EVENT_BUS_PUBLISH_PORT=4442
+#      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+#    ports:
+#      - "6902:5900"
+
+  selenium-hub:
+    image: selenium/hub:4.10.0-20230607
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
 
   owasp-zap:
     image: owasp/zap2docker-stable:latest

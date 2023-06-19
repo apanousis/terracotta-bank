@@ -58,18 +58,23 @@ public class SeleniumSupport {
 
     private WebDriver startChrome() {
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--start-maximized");
         chromeOptions.addArguments("--disable-extensions");
+        chromeOptions.addArguments("--ignore-certificate-errors");
+        chromeOptions.addArguments("--disable-dev-shm-usage");
         chromeOptions.addArguments("disable-geolocation");
+
         Proxy proxy = new Proxy();
         proxy.setHttpProxy("owasp-zap:8090");
         proxy.setFtpProxy("owasp-zap:8090");
         proxy.setSslProxy("owasp-zap:8090");
         capabilities.setCapability(CapabilityType.PROXY, proxy);
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+
         try {
-            EventFiringWebDriver eventFiringWebDriver = new EventFiringWebDriver(new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), capabilities));
+            EventFiringWebDriver eventFiringWebDriver = new EventFiringWebDriver(new RemoteWebDriver(new URL("http://localhost:4444"), capabilities));
             SecurityScannerEventListener securityScannerEventListener = new SecurityScannerEventListener();
             securityScannerEventListener.setZapScanner(new ZapProxyScanner("127.0.0.1", 8090));
             eventFiringWebDriver.register(securityScannerEventListener);

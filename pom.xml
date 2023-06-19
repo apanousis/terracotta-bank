@@ -130,11 +130,11 @@
             <version>2.10.2</version>
         </dependency>
 
-		<!-- for jdk logging <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-jdk14</artifactId> 
+		<!-- for jdk logging <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-jdk14</artifactId>
 			<version>1.7.21</version> </dependency> -->
 
-		<!-- for log4j <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-log4j12</artifactId> 
-			<version>1.7.21</version> </dependency> <dependency> <groupId>log4j</groupId> 
+		<!-- for log4j <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.21</version> </dependency> <dependency> <groupId>log4j</groupId>
 			<artifactId>log4j</artifactId> <version>1.2.17</version> </dependency> -->
 
 		<!-- for logback -->
@@ -272,7 +272,7 @@
 
     </dependencies>
 	<build>
-		<!-- <resources> <resource> <directory>src/main/webapp</directory> </resource> 
+		<!-- <resources> <resource> <directory>src/main/webapp</directory> </resource>
 			</resources> -->
 		<finalName>terracotta-bank</finalName>
 		<plugins>
@@ -350,7 +350,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>5.0.0-M3</version>
+                <version>8.3.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -368,8 +368,9 @@
                 <configuration>
                     <targetUrl>http://localhost:8080</targetUrl>
                     <zapPort>8090</zapPort>
-                    <shouldRunWithDocker>true</shouldRunWithDocker>
+                    <shouldRunWithDocker>false</shouldRunWithDocker>
                     <zapOptions>-daemon -host 0.0.0.0 -port 8090 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true</zapOptions>
+
                 </configuration>
                 <executions>
                     <execution>

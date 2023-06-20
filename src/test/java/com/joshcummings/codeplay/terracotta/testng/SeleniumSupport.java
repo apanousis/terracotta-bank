@@ -1,12 +1,12 @@
 package com.joshcummings.codeplay.terracotta.testng;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
+import com.joshcummings.codeplay.terracotta.security.SecurityScannerEventListener;
+import com.joshcummings.codeplay.terracotta.security.ZapProxyScanner;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.CapabilityType;
@@ -14,40 +14,35 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 
-import com.joshcummings.codeplay.terracotta.security.SecurityScannerEventListener;
-import com.joshcummings.codeplay.terracotta.security.ZapProxyScanner;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class SeleniumSupport {
 
-    private static String ZAP_HOST = "localhost";
-    private static Integer ZAP_PORT = 8090;
+    private final static String ZAP_HOST = "owasp-zap";
+    private final static Integer ZAP_PORT = 8090;
 
-    public WebDriver start(String driverType) throws Exception {
-        if ("chrome".equals(driverType)) {
-            return startChrome();
-        } else if ("firefox".equals(driverType)) {
+    public WebDriver start(String driverType) {
+        if ("firefox".equals(driverType)) {
             return startFirefox();
-        } else {
-             throw new Exception("Incompatible driver type");
         }
+        return startChrome();
     }
 
     private WebDriver startFirefox() {
         WebDriverManager.firefoxdriver().setup();
         FirefoxProfile profile = new FirefoxProfile();
 
-//        profile.setPreference("network.proxy.type", 1);
-//        profile.setPreference("network.proxy.http", ZAP_HOST);
-//        profile.setPreference("network.proxy.http_port", ZAP_PORT);
-//        profile.setPreference("network.proxy.ssl", ZAP_HOST);
-//        profile.setPreference("network.proxy.ssl_port", ZAP_PORT);
+        profile.setPreference("network.proxy.type", 1);
+        profile.setPreference("network.proxy.http", ZAP_HOST);
+        profile.setPreference("network.proxy.http_port", ZAP_PORT);
+        profile.setPreference("network.proxy.ssl", ZAP_HOST);
+        profile.setPreference("network.proxy.ssl_port", ZAP_PORT);
 
-        FirefoxOptions options = new FirefoxOptions();
-        options.setProfile(profile);
+        FirefoxOptions capabilities = new FirefoxOptions();
+        capabilities.setProfile(profile);
 
-        return new FirefoxDriver(options);
+        return buildWebDriver(capabilities);
     }
 
     public void stop(WebDriver driver) {
@@ -67,20 +62,26 @@ public class SeleniumSupport {
         chromeOptions.addArguments("disable-geolocation");
 
         Proxy proxy = new Proxy();
-        proxy.setHttpProxy("owasp-zap:8090");
-        proxy.setFtpProxy("owasp-zap:8090");
-        proxy.setSslProxy("owasp-zap:8090");
+        proxy.setHttpProxy(ZAP_HOST + ":" + ZAP_PORT);
+        proxy.setFtpProxy(ZAP_HOST + ":" + ZAP_PORT);
+        proxy.setSslProxy(ZAP_HOST + ":" + ZAP_PORT);
         capabilities.setCapability(CapabilityType.PROXY, proxy);
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 
+        return buildWebDriver(capabilities);
+    }
+
+    private EventFiringWebDriver buildWebDriver(MutableCapabilities capabilities) {
         try {
-            EventFiringWebDriver eventFiringWebDriver = new EventFiringWebDriver(new RemoteWebDriver(new URL("http://localhost:4444"), capabilities));
+            EventFiringWebDriver eventFiringWebDriver = new EventFiringWebDriver(
+                    new RemoteWebDriver(new URL("http://localhost:4444"), capabilities)
+            );
             SecurityScannerEventListener securityScannerEventListener = new SecurityScannerEventListener();
-            securityScannerEventListener.setZapScanner(new ZapProxyScanner("127.0.0.1", 8090));
+            securityScannerEventListener.setZapScanner(new ZapProxyScanner(ZAP_HOST, ZAP_PORT));
             eventFiringWebDriver.register(securityScannerEventListener);
             return eventFiringWebDriver;
-        } catch (MalformedURLException e) {
-
+        } catch (MalformedURLException ignored) {
+            ignored.printStackTrace();
         }
         return null;
     }

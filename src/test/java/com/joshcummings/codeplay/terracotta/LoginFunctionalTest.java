@@ -1,5 +1,7 @@
 package com.joshcummings.codeplay.terracotta;
 
+import com.joshcummings.codeplay.terracotta.testng.TestConstants;
+import com.joshcummings.codeplay.terracotta.testng.XssCheatSheet;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
@@ -7,9 +9,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
-
-import com.joshcummings.codeplay.terracotta.testng.TestConstants;
-import com.joshcummings.codeplay.terracotta.testng.XssCheatSheet;
 
 public class LoginFunctionalTest extends AbstractEmbeddedTomcatSeleniumTest {
     @AfterMethod(alwaysRun = true)
@@ -46,7 +45,7 @@ public class LoginFunctionalTest extends AbstractEmbeddedTomcatSeleniumTest {
 
         Thread.sleep(2000);
 
-        Assert.assertEquals(driver.getCurrentUrl(), "http://terracotta-bank.com:8080/", "You got redirected to: " + driver.getCurrentUrl());
+        Assert.assertEquals(driver.getCurrentUrl(), "http://terracotta-bank:8080/", "You got redirected to: " + driver.getCurrentUrl());
     }
 
     @Test(groups = "data", expectedExceptions = NoSuchElementException.class)

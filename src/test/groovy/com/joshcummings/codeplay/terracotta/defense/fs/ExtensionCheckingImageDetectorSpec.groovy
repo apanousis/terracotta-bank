@@ -1,6 +1,5 @@
 package com.joshcummings.codeplay.terracotta.defense.fs
 
-
 import spock.lang.Specification
 import spock.lang.Unroll
 

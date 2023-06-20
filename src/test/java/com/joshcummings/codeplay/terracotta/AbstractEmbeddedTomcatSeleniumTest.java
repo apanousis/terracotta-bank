@@ -1,85 +1,31 @@
 package com.joshcummings.codeplay.terracotta;
 
-import java.util.concurrent.TimeUnit;
-
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.joshcummings.codeplay.terracotta.testng.HttpSupport;
+import com.joshcummings.codeplay.terracotta.testng.SeleniumSupport;
+import com.joshcummings.codeplay.terracotta.testng.TestConstants;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
-import com.joshcummings.codeplay.terracotta.testng.DockerSupport;
-import com.joshcummings.codeplay.terracotta.testng.HttpSupport;
-import com.joshcummings.codeplay.terracotta.testng.ProxySupport;
-import com.joshcummings.codeplay.terracotta.testng.SeleniumSupport;
-import com.joshcummings.codeplay.terracotta.testng.TestConstants;
-import com.joshcummings.codeplay.terracotta.testng.TomcatSupport;
+import java.util.concurrent.TimeUnit;
 
 public class AbstractEmbeddedTomcatSeleniumTest {
     static WebDriver driver;
 
     protected SeleniumSupport selenium = new SeleniumSupport();
-    protected ProxySupport proxy = new ProxySupport();
-    protected TomcatSupport tomcat = new TomcatSupport();
-    protected DockerSupport docker = new DockerSupport();
     protected HttpSupport http = new HttpSupport();
 
-    /*@BeforeTest(alwaysRun = true)
-    public void start(ITestContext ctx) throws Exception {
-        if ("docker".equals(ctx.getName())) {
-            docker.startContainer();
-        } else {
-			tomcat.startContainer();
-        }
-    }*/
-
     @BeforeTest(alwaysRun = true)
-    public void startSelenium() throws Exception {
+    public void startSelenium() {
         driver = selenium.start(System.getProperty("driver"));
     }
-
-//    @BeforeTest(alwaysRun = true)
-//    public void startProxy(ITestContext ctx) {
-//        proxy.start(ctx);
-//    }
-
-//    @BeforeTest(groups = "filesystem")
-//    public void startClamav(ITestContext ctx) {
-//        if ("docker".equals(ctx.getName())) {
-//            docker.startClamav();
-//        }
-//    }
-
-//    @AfterTest(alwaysRun = true)
-//    public void stop(ITestContext ctx) throws Exception {
-//        if ("docker".equals(ctx.getName())) {
-//            docker.stopContainer();
-//        } else {
-//			tomcat.stopContainer();
-//        }
-//    }
 
     @AfterTest(alwaysRun = true)
     public void shutdownSelenium() {
         selenium.stop(driver);
     }
-
-//    @AfterTest(alwaysRun = true)
-//    public void shutdownProxy() {
-//        proxy.stop();
-//    }
-//
-//    @AfterTest(groups = "filesystem")
-//    public void stopClamav(ITestContext ctx) {
-//        if ("docker".equals(ctx.getName())) {
-//            docker.stopClamav();
-//        }
-//    }
 
     protected void goToPage(String page) {
         driver.get("http://" + TestConstants.host + page);

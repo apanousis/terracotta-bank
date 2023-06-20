@@ -44,9 +44,8 @@ public class SecurityScannerEventListener implements WebDriverEventListener {
     }
 
     @Override
-    public void afterNavigateTo(String s, WebDriver webDriver) {
-        scan(s);
-
+    public void afterNavigateTo(String url, WebDriver webDriver) {
+        scan(url);
     }
 
     @Override
@@ -124,8 +123,6 @@ public class SecurityScannerEventListener implements WebDriverEventListener {
 
     }
 
-
-
     public ZapProxyScanner getZapScanner() {
         return zapScanner;
     }
@@ -139,6 +136,7 @@ public class SecurityScannerEventListener implements WebDriverEventListener {
             LOG.info("Alert: " + alert.getAlert() + " at URL: " + alert.getUrl() + " Parameter: " + alert.getParam() + " CWE ID: " + alert.getCweId());
         }
     }
+
     /*
         Remove false positives, filter based on risk and reliability
      */
@@ -151,6 +149,7 @@ public class SecurityScannerEventListener implements WebDriverEventListener {
         }
         return filtered;
     }
+
     void setAlertAndAttackStrength() {
         for (Policy policy : Policy.values()) {
             String ids = enableZapPolicy(policy);
@@ -161,6 +160,7 @@ public class SecurityScannerEventListener implements WebDriverEventListener {
             }
         }
     }
+
     private void scanWithZap(String url) {
         LOG.info("Scanning...");
         zapScanner.scan(url);
@@ -177,11 +177,13 @@ public class SecurityScannerEventListener implements WebDriverEventListener {
         }
         LOG.info("Scanning done.");
     }
+
     private String enableZapPolicy(Policy policy) {
         String scannerIds = policy.getScannerIds();
         zapScanner.setEnableScanners(scannerIds, true);
         return scannerIds;
     }
+
     private void spiderWithZap(String baseUrl) {
         zapScanner.setThreadCount(5);
         zapScanner.setMaxDepth(5);
@@ -201,6 +203,7 @@ public class SecurityScannerEventListener implements WebDriverEventListener {
             LOG.info("Found URL: " + url);
         }
     }
+
     private void scan(String url) {
         LOG.info("Spidering...");
         spiderWithZap(url);

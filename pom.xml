@@ -366,11 +366,10 @@
                 <artifactId>zap-maven-plugin</artifactId>
                 <version>1.2.1-0</version>
                 <configuration>
-                    <targetUrl>http://localhost:8080</targetUrl>
+                    <targetUrl>http://terracotta-bank:8080</targetUrl>
                     <zapPort>8090</zapPort>
                     <shouldRunWithDocker>false</shouldRunWithDocker>
                     <zapOptions>-daemon -host 0.0.0.0 -port 8090 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true</zapOptions>
-
                 </configuration>
                 <executions>
                     <execution>

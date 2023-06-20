@@ -2,13 +2,16 @@ package gatling.test.example.simulation
 
 import gatling.test.example.simulation.PerfTestConfig.{baseUrl, durationMin, maxResponseTimeMs, meanResponseTimeMs}
 import io.gatling.core.Predef.{constantUsersPerSec, global, scenario, _}
+import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.Predef.{http, status, _}
+import io.gatling.http.protocol.HttpProtocolBuilder
 
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 class ExamplePostSimulation extends Simulation {
-  val httpConf = http.baseURL(baseUrl)
-  val postUsers = scenario("Root end point calls")
+  val httpConf: HttpProtocolBuilder = http.baseUrl(baseUrl)
+  val postUsers: ScenarioBuilder = scenario("Root endpoint calls")
     .exec(http("home page")
       .get("/")
       .check(css("#login-csrf-token","value").saveAs("csrfToken")))

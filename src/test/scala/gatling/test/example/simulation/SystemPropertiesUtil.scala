@@ -14,11 +14,11 @@ object SystemPropertiesUtil {
   }
 
   def getAsBooleanOrElse(property: String, default: Boolean): Boolean = {
-    systemProperties.getOrElse(property, default).toString().toBoolean
+    systemProperties.getOrElse(property, default).toString.toBoolean
   }
 
   def getAsDoubleOrElse(property: String, default: Double): Double = {
-    systemProperties.getOrElse(property, default).toString().toDouble
+    systemProperties.getOrElse(property, default).toString.toDouble
   }
 
 }

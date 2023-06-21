@@ -13,6 +13,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.zaproxy.clientapi.core.ClientApiException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -74,14 +75,14 @@ public class SeleniumSupport {
     private EventFiringWebDriver buildWebDriver(MutableCapabilities capabilities) {
         try {
             EventFiringWebDriver eventFiringWebDriver = new EventFiringWebDriver(
-                    new RemoteWebDriver(new URL("http://localhost:4444"), capabilities)
+                    new RemoteWebDriver(new URL("http://selenium-hub:4444"), capabilities)
             );
             SecurityScannerEventListener securityScannerEventListener = new SecurityScannerEventListener();
-            securityScannerEventListener.setZapScanner(new ZapProxyScanner(ZAP_HOST, ZAP_PORT));
+            securityScannerEventListener.setZapScanner(new ZapProxyScanner(ZAP_HOST, ZAP_PORT, false));
             eventFiringWebDriver.register(securityScannerEventListener);
             return eventFiringWebDriver;
-        } catch (MalformedURLException ignored) {
-            ignored.printStackTrace();
+        } catch (MalformedURLException | ClientApiException e) {
+            e.printStackTrace();
         }
         return null;
     }

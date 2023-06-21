@@ -208,8 +208,7 @@ public class SecurityScannerEventListener implements WebDriverEventListener {
         LOG.info("Spidering...");
         spiderWithZap(url);
         LOG.info("Spider done.");
-        setAlertAndAttackStrength();
-        zapScanner.setEnablePassiveScan(true);
+//        setAlertAndAttackStrength();
         scanWithZap(url);
         List<Alert> alerts = filterAlerts(zapScanner.getAlerts());
         logAlerts(alerts);

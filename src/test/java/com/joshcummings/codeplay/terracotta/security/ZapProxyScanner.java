@@ -9,11 +9,16 @@ import java.util.regex.Pattern;
 public class ZapProxyScanner {
 
     private final ClientApi clientApi;
+    private final boolean activeScanning;
 
-    public ZapProxyScanner(String host, int port) throws IllegalArgumentException {
-        clientApi = new ClientApi(host, port);
+    public ZapProxyScanner(String host, int port, boolean activeScanning) throws IllegalArgumentException, ClientApiException {
+        this.clientApi = new ClientApi(host, port);
+        this.activeScanning = activeScanning;
+
+        if (!activeScanning) {
+            clientApi.pscan.setEnabled("true");
+        }
     }
-
 
     public void setScannerAttackStrength(String scannerId, String strength) throws ProxyException {
         try {
@@ -23,7 +28,6 @@ public class ZapProxyScanner {
         }
     }
 
-
     public void setScannerAlertThreshold(String scannerId, String threshold) throws ProxyException {
         try {
             clientApi.ascan.setScannerAlertThreshold(scannerId, threshold, null);
@@ -32,22 +36,16 @@ public class ZapProxyScanner {
         }
     }
 
-
-    public void setEnableScanners(String ids, boolean enabled) throws ProxyException {
+    public void setEnableScanners(String ids, boolean enable) throws ProxyException {
+        if (!activeScanning) {
+            return;
+        }
         try {
-            if (enabled) {
+            if (enable) {
                 clientApi.ascan.enableScanners(ids, null);
             } else {
                 clientApi.ascan.disableScanners(ids, null);
             }
-        } catch (ClientApiException e) {
-            throw new ProxyException(e);
-        }
-    }
-
-    public void setEnablePassiveScan(boolean enabled) throws ProxyException {
-        try {
-            clientApi.pscan.setEnabled(Boolean.toString(enabled));
         } catch (ClientApiException e) {
             throw new ProxyException(e);
         }
